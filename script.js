@@ -1,9 +1,7 @@
-// ===== INITIAL PASSWORD =====
 if (!localStorage.getItem('password')) {
-  localStorage.setItem('password', 'recipe123'); // default
+  localStorage.setItem('password', 'recipe123');
 }
 
-// ===== LOGIN =====
 function login() {
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
@@ -23,7 +21,6 @@ function logout() {
   document.getElementById('main-page').classList.remove('active');
 }
 
-// ===== RESET PASSWORD (INLINE FORM) =====
 function toggleResetForm() {
   const form = document.getElementById('reset-form');
   form.classList.toggle('hidden');
@@ -50,7 +47,6 @@ function setNewPassword() {
   document.getElementById('confirm-password').value = '';
 }
 
-// ===== IMAGE PREVIEW =====
 const recipeImageInput = document.getElementById('recipe-image');
 const previewImages = document.getElementById('preview-images');
 let imageFiles = [];
@@ -70,7 +66,6 @@ recipeImageInput.addEventListener('change', function () {
   });
 });
 
-// ===== ADD RECIPE =====
 function addRecipe() {
   const name = document.getElementById('recipe-name').value;
   const ingredients = document.getElementById('recipe-ingredients').value;
@@ -94,7 +89,6 @@ function addRecipe() {
   imageFiles = [];
 }
 
-// ===== DISPLAY RECIPE =====
 function displayRecipes() {
   const container = document.getElementById('recipes-container');
   container.innerHTML = '';
@@ -108,13 +102,12 @@ function displayRecipes() {
       ${recipe.images.map(img => `<img src="${img}" />`).join('')}
       <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
       <p><strong>Instructions:</strong> ${recipe.steps}</p>
-      <button onclick="deleteRecipe(${index})">Delete</button>
+      <button onclick="deleteRecipe(${index})"><i class="fa-solid fa-trash"></i> Delete</button>
     `;
     container.appendChild(card);
   });
 }
 
-// ===== DELETE RECIPE =====
 function deleteRecipe(index) {
   const recipes = JSON.parse(localStorage.getItem('recipes') || '[]');
   recipes.splice(index, 1);
