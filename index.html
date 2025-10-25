@@ -3,27 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Personal Recipe Book</title>
+  <title>Snoop Recipe ID</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome (for icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <!-- LOGIN PAGE -->
   <div id="login-page" class="page active">
     <div class="login-box">
-      <h2>Sign in to Your Recipe Book</h2>
+      <h2><i class="fa-solid fa-cupcake"></i> Sign in to Snoop Recipe ID</h2>
       <input type="text" id="username" placeholder="Username">
       <input type="password" id="password" placeholder="Password">
-      <button onclick="login()">Sign In</button>
+      <button onclick="login()"><i class="fa-solid fa-right-to-bracket"></i> Sign In</button>
       <button id="reset-btn" onclick="toggleResetForm()">Forgot Password?</button>
       <p id="login-error"></p>
 
       <!-- Reset Password Form -->
       <div id="reset-form" class="hidden">
-        <h3>Reset Password</h3>
+        <h3><i class="fa-solid fa-lock"></i> Reset Password</h3>
         <input type="password" id="new-password" placeholder="New Password">
         <input type="password" id="confirm-password" placeholder="Confirm Password">
-        <button onclick="setNewPassword()">Save New Password</button>
+        <button onclick="setNewPassword()"><i class="fa-solid fa-key"></i> Save New Password</button>
         <p id="reset-message"></p>
       </div>
     </div>
@@ -32,12 +36,12 @@
   <!-- MAIN PAGE -->
   <div id="main-page" class="page">
     <header>
-      <h1>Personal Recipe Book</h1>
-      <button id="logout-btn" onclick="logout()">Log Out</button>
+      <h1><i class="fa-solid fa-cookie-bite"></i> Snoop Recipe ID</h1>
+      <button id="logout-btn" onclick="logout()"><i class="fa-solid fa-door-open"></i> Log Out</button>
     </header>
 
     <section id="add-recipe">
-      <h2>Add New Recipe</h2>
+      <h2><i class="fa-solid fa-pen-to-square"></i> Add New Recipe</h2>
       <input type="text" id="recipe-name" placeholder="Recipe Name">
       <textarea id="recipe-ingredients" placeholder="Ingredients"></textarea>
       <textarea id="recipe-steps" placeholder="Instructions"></textarea>
@@ -46,11 +50,11 @@
       <input type="file" id="recipe-image" accept="image/*" multiple>
       <div id="preview-images" class="preview-images"></div>
 
-      <button onclick="addRecipe()">Save Recipe</button>
+      <button onclick="addRecipe()"><i class="fa-solid fa-floppy-disk"></i> Save Recipe</button>
     </section>
 
     <section id="recipe-list">
-      <h2>Recipe List</h2>
+      <h2><i class="fa-solid fa-book-open"></i> Recipe List</h2>
       <div id="recipes-container"></div>
     </section>
   </div>
