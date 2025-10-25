@@ -41,7 +41,7 @@ body{
 @keyframes floatC{0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)}}
 
 /* Header / Hero */
-.site-header{position:sticky;top:0;background:var(--pink-1);border-bottom:1px solid #f6c7d0;z-index:5;box-shadow:0 3px 10px rgba(0,0,0,0.03)}
+.site-header { position: relative; background: var(--pink-1); border-bottom: 1px solid #f6c7d0; z-index: 5; box-shadow: 0 3px 10px rgba(0,0,0,0.03); }
 .header-inner{max-width:var(--maxwidth);margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
 .brand{font-family:"Playfair Display",serif;color:#b94f6f;margin:0;font-size:22px}
 .brand i{color:var(--accent);margin-right:8px}
@@ -130,3 +130,4 @@ textarea{resize:vertical}
   .header-inner{padding:12px}
   .brand{font-size:18px}
 }
+
