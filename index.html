@@ -5,15 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Snoop Recipe ID</title>
 
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  <!-- Floating icons -->
-  <div class="float-icon icon-1"><img src="https://i.ibb.co/YyhC8xr/cupcake-icon.png" alt="cupcake"></div>
-  <div class="float-icon icon-2"><img src="https://i.ibb.co/Bz3fD3p/donut-icon.png" alt="donut"></div>
-  <div class="float-icon icon-3"><img src="https://i.ibb.co/5MjZC3g/cookie-icon.png" alt="cookie"></div>
 
   <!-- Header -->
   <header class="site-header">
@@ -46,6 +42,7 @@
           <option value="cost-desc">Cost: High → Low</option>
           <option value="rating-desc">Rating: High → Low</option>
         </select>
+        <button class="btn danger" onclick="clearAllRecipes()"><i class="fa-solid fa-trash"></i> Clear All</button>
       </div>
     </section>
 
@@ -99,6 +96,6 @@
     <div class="small muted">You can export/import or connect to cloud later.</div>
   </footer>
 
-  <script src="script.js?v=4"></script>
+  <script src="script.js?v=5"></script>
 </body>
 </html>
