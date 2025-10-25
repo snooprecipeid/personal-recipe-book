@@ -52,11 +52,6 @@ header h1, section h2 {
   font-weight: 600;
 }
 
-.login-box h2 i {
-  color: #e48fa7;
-  margin-right: 8px;
-}
-
 .login-box input {
   display: block;
   width: 100%;
@@ -65,12 +60,6 @@ header h1, section h2 {
   border-radius: 15px;
   border: 1px solid #f3c0cf;
   font-size: 15px;
-}
-
-.login-box input:focus {
-  outline: none;
-  border-color: #e48fa7;
-  box-shadow: 0 0 5px rgba(228, 143, 167, 0.5);
 }
 
 .login-box button {
@@ -87,57 +76,6 @@ header h1, section h2 {
 
 .login-box button:hover {
   background-color: #d46b8a;
-}
-
-/* Forgot Password */
-#reset-btn {
-  background: transparent;
-  border: none;
-  color: #d46b8a;
-  font-weight: 500;
-  margin-top: 10px;
-  cursor: pointer;
-  transition: color 0.3s ease;
-  text-decoration: underline;
-}
-
-#reset-btn:hover {
-  color: #b94f6f;
-}
-
-#login-error {
-  color: red;
-  margin-top: 10px;
-}
-
-/* Reset Form */
-#reset-form {
-  margin-top: 20px;
-  background: #fff8f9;
-  padding: 15px;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-  animation: fadeIn 0.5s ease;
-}
-
-#reset-form.hidden {
-  display: none;
-}
-
-#reset-form h3 {
-  color: #b94f6f;
-  margin-bottom: 10px;
-}
-
-#reset-message {
-  margin-top: 10px;
-  color: #b94f6f;
-  font-weight: 500;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ========== MAIN PAGE ========== */
@@ -158,16 +96,6 @@ header h1 {
   font-weight: 700;
 }
 
-header h1 i {
-  color: #e48fa7;
-  margin-right: 10px;
-  transition: transform 0.3s ease;
-}
-
-header h1 i:hover {
-  transform: rotate(-10deg) scale(1.1);
-}
-
 #logout-btn {
   position: absolute;
   top: 20px;
@@ -179,11 +107,6 @@ header h1 i:hover {
   padding: 8px 20px;
   cursor: pointer;
   font-weight: 500;
-  transition: background 0.3s ease;
-}
-
-#logout-btn:hover {
-  background: #d46b8a;
 }
 
 /* ========== SECTIONS ========== */
@@ -197,57 +120,13 @@ section {
   box-shadow: 0 8px 25px rgba(255, 182, 193, 0.2);
 }
 
-section h2 {
-  color: #d46b8a;
-  font-size: 22px;
-  margin-bottom: 15px;
-}
-
-/* Inputs */
-#add-recipe input, #add-recipe textarea {
+#recipe-cost {
   width: 100%;
   margin: 12px 0;
   padding: 12px;
   border-radius: 15px;
   border: 1px solid #f3c0cf;
   font-size: 15px;
-}
-
-#add-recipe input:focus, #add-recipe textarea:focus {
-  outline: none;
-  border-color: #e48fa7;
-  box-shadow: 0 0 6px rgba(228, 143, 167, 0.4);
-}
-
-#add-recipe button {
-  background: #e48fa7;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 12px 30px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.3s ease;
-}
-
-#add-recipe button:hover {
-  background: #d46b8a;
-}
-
-/* Image preview */
-.preview-images {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.preview-images img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 15px;
-  border: 2px solid #f8cdd7;
 }
 
 /* Recipe cards */
@@ -274,32 +153,33 @@ section h2 {
   font-size: 20px;
 }
 
-.recipe-card p {
-  margin: 5px 0;
-  line-height: 1.5;
+.recipe-card .cost {
+  background: #ffe8ef;
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 12px;
+  color: #b94f6f;
+  font-weight: 600;
+  margin-top: 5px;
 }
 
-.recipe-card button {
-  background: #f7a8bc;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 15px;
-  cursor: pointer;
+/* STAR RATING */
+.rating {
   margin-top: 10px;
-  transition: background 0.3s ease;
+  color: #f4c542;
+  font-size: 22px;
+  cursor: pointer;
 }
 
-.recipe-card button:hover {
-  background: #e48fa7;
+.rating .fa-star {
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  body {
-    background-size: 70px, 70px, 60px, 60px;
-  }
-  header h1 { font-size: 22px; }
-  section { width: 90%; padding: 20px; }
-  .login-box { width: 80%; padding: 30px; }
+.rating .fa-star:hover {
+  transform: scale(1.2);
+  color: #ffcc33;
+}
+
+.active-star {
+  color: #ffc107;
 }
