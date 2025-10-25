@@ -47,7 +47,7 @@ function setNewPassword() {
   document.getElementById('confirm-password').value = '';
 }
 
-// ========== IMAGE UPLOAD ==========
+// IMAGE UPLOAD
 const recipeImageInput = document.getElementById('recipe-image');
 const previewImages = document.getElementById('preview-images');
 let imageFiles = [];
@@ -101,7 +101,6 @@ function displayRecipes() {
     const card = document.createElement('div');
     card.classList.add('recipe-card');
 
-    // Generate stars
     let starsHTML = '';
     for (let i = 1; i <= 5; i++) {
       const active = i <= (recipe.rating || 0) ? 'active-star' : '';
