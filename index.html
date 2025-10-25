@@ -8,7 +8,7 @@
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <!-- Font Awesome (for icons) -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -22,7 +22,6 @@
       <button id="reset-btn" onclick="toggleResetForm()">Forgot Password?</button>
       <p id="login-error"></p>
 
-      <!-- Reset Password Form -->
       <div id="reset-form" class="hidden">
         <h3><i class="fa-solid fa-lock"></i> Reset Password</h3>
         <input type="password" id="new-password" placeholder="New Password">
@@ -45,11 +44,10 @@
       <input type="text" id="recipe-name" placeholder="Recipe Name">
       <textarea id="recipe-ingredients" placeholder="Ingredients"></textarea>
       <textarea id="recipe-steps" placeholder="Instructions"></textarea>
-
+      <input type="number" id="recipe-cost" placeholder="Estimated Cost (Rp)">
       <label for="recipe-image">Upload Photos (you can add more than one):</label>
       <input type="file" id="recipe-image" accept="image/*" multiple>
       <div id="preview-images" class="preview-images"></div>
-
       <button onclick="addRecipe()"><i class="fa-solid fa-floppy-disk"></i> Save Recipe</button>
     </section>
 
