@@ -47,6 +47,7 @@ function setNewPassword() {
   document.getElementById('confirm-password').value = '';
 }
 
+// ========== IMAGE UPLOAD ==========
 const recipeImageInput = document.getElementById('recipe-image');
 const previewImages = document.getElementById('preview-images');
 let imageFiles = [];
@@ -70,20 +71,22 @@ function addRecipe() {
   const name = document.getElementById('recipe-name').value;
   const ingredients = document.getElementById('recipe-ingredients').value;
   const steps = document.getElementById('recipe-steps').value;
+  const cost = document.getElementById('recipe-cost').value;
 
-  if (!name || !ingredients || !steps) {
-    alert('Please fill out all fields!');
+  if (!name || !ingredients || !steps || !cost) {
+    alert('Please fill out all fields, including cost!');
     return;
   }
 
   const recipes = JSON.parse(localStorage.getItem('recipes') || '[]');
-  recipes.push({ name, ingredients, steps, images: imageFiles });
+  recipes.push({ name, ingredients, steps, cost, images: imageFiles, rating: 0 });
   localStorage.setItem('recipes', JSON.stringify(recipes));
   displayRecipes();
 
   document.getElementById('recipe-name').value = '';
   document.getElementById('recipe-ingredients').value = '';
   document.getElementById('recipe-steps').value = '';
+  document.getElementById('recipe-cost').value = '';
   recipeImageInput.value = '';
   previewImages.innerHTML = '';
   imageFiles = [];
@@ -97,15 +100,32 @@ function displayRecipes() {
   recipes.forEach((recipe, index) => {
     const card = document.createElement('div');
     card.classList.add('recipe-card');
+
+    // Generate stars
+    let starsHTML = '';
+    for (let i = 1; i <= 5; i++) {
+      const active = i <= (recipe.rating || 0) ? 'active-star' : '';
+      starsHTML += `<i class="fa-solid fa-star ${active}" onclick="rateRecipe(${index}, ${i})"></i>`;
+    }
+
     card.innerHTML = `
       <h3>${recipe.name}</h3>
       ${recipe.images.map(img => `<img src="${img}" />`).join('')}
       <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
       <p><strong>Instructions:</strong> ${recipe.steps}</p>
+      <p class="cost">💰 Rp ${recipe.cost}</p>
+      <div class="rating">${starsHTML}</div>
       <button onclick="deleteRecipe(${index})"><i class="fa-solid fa-trash"></i> Delete</button>
     `;
     container.appendChild(card);
   });
+}
+
+function rateRecipe(index, stars) {
+  const recipes = JSON.parse(localStorage.getItem('recipes') || '[]');
+  recipes[index].rating = stars;
+  localStorage.setItem('recipes', JSON.stringify(recipes));
+  displayRecipes();
 }
 
 function deleteRecipe(index) {
