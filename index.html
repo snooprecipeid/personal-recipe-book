@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Recipe Book</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- LOGIN PAGE -->
+  <div id="login-page" class="page active">
+    <div class="login-box">
+      <h2>Sign in to Your Recipe Book</h2>
+      <input type="text" id="username" placeholder="Username">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="login()">Sign In</button>
+      <button id="reset-btn" onclick="toggleResetForm()">Forgot Password?</button>
+      <p id="login-error"></p>
+
+      <!-- Reset Password Form -->
+      <div id="reset-form" class="hidden">
+        <h3>Reset Password</h3>
+        <input type="password" id="new-password" placeholder="New Password">
+        <input type="password" id="confirm-password" placeholder="Confirm Password">
+        <button onclick="setNewPassword()">Save New Password</button>
+        <p id="reset-message"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN PAGE -->
+  <div id="main-page" class="page">
+    <header>
+      <h1>Personal Recipe Book</h1>
+      <button id="logout-btn" onclick="logout()">Log Out</button>
+    </header>
+
+    <section id="add-recipe">
+      <h2>Add New Recipe</h2>
+      <input type="text" id="recipe-name" placeholder="Recipe Name">
+      <textarea id="recipe-ingredients" placeholder="Ingredients"></textarea>
+      <textarea id="recipe-steps" placeholder="Instructions"></textarea>
+
+      <label for="recipe-image">Upload Photos (you can add more than one):</label>
+      <input type="file" id="recipe-image" accept="image/*" multiple>
+      <div id="preview-images" class="preview-images"></div>
+
+      <button onclick="addRecipe()">Save Recipe</button>
+    </section>
+
+    <section id="recipe-list">
+      <h2>Recipe List</h2>
+      <div id="recipes-container"></div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

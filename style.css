@@ -1,0 +1,207 @@
+/* ========== GLOBAL ========== */
+body {
+  font-family: "Poppins", sans-serif;
+  background:
+    radial-gradient(circle at left top, rgba(255, 200, 215, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at right bottom, rgba(255, 200, 215, 0.4) 0%, transparent 50%),
+    linear-gradient(to bottom right, #fff7fa, #fde8ef);
+  background-image:
+    url("https://i.ibb.co/YyhC8xr/cupcake-icon.png"),
+    url("https://i.ibb.co/Bz3fD3p/donut-icon.png"),
+    url("https://i.ibb.co/5MjZC3g/cookie-icon.png"),
+    url("https://i.ibb.co/pnBCRjX/whisk-icon.png"),
+    url("https://i.ibb.co/vzYbFwn/rolling-pin.png");
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-position:
+    left 5% top 15%, right 5% bottom 10%, right 12% top 20%, left 7% bottom 15%, right 8% 50%;
+  background-size: 120px, 120px, 90px, 100px, 130px;
+  margin: 0;
+  padding: 0;
+  color: #5a4a4a;
+  overflow-x: hidden;
+}
+
+header h1, section h2 {
+  font-family: "Playfair Display", serif;
+}
+
+/* Page layout */
+.page {
+  display: none;
+  min-height: 100vh;
+}
+
+.page.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* ========== LOGIN PAGE ========== */
+.login-box {
+  background: #fff;
+  padding: 40px 50px;
+  border-radius: 25px;
+  box-shadow: 0 8px 25px rgba(255, 182, 193, 0.3);
+  text-align: center;
+  max-width: 350px;
+}
+
+.login-box h2 {
+  color: #d46b8a;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+.login-box input {
+  display: block;
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border-radius: 15px;
+  border: 1px solid #f3c0cf;
+  font-size: 15px;
+}
+
+.login-box input:focus {
+  outline: none;
+  border-color: #e48fa7;
+  box-shadow: 0 0 5px rgba(228, 143, 167, 0.5);
+}
+
+.login-box button {
+  background-color: #e48fa7;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.login-box button:hover {
+  background-color: #d46b8a;
+}
+
+/* Forgot Password */
+#reset-btn {
+  background: transparent;
+  border: none;
+  color: #d46b8a;
+  font-weight: 500;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  text-decoration: underline;
+}
+
+#reset-btn:hover {
+  color: #b94f6f;
+}
+
+#login-error {
+  color: red;
+  margin-top: 10px;
+}
+
+/* Reset Form */
+#reset-form {
+  margin-top: 20px;
+  background: #fff8f9;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  animation: fadeIn 0.5s ease;
+}
+
+#reset-form.hidden {
+  display: none;
+}
+
+#reset-form h3 {
+  color: #b94f6f;
+  margin-bottom: 10px;
+}
+
+#reset-message {
+  margin-top: 10px;
+  color: #b94f6f;
+  font-weight: 500;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== MAIN PAGE ========== */
+header {
+  background-color: #fde8ef;
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 2px solid #f6c7d0;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+header h1 {
+  margin: 0;
+  color: #b94f6f;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+#logout-btn {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  background: #e48fa7;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+#logout-btn:hover {
+  background: #d46b8a;
+}
+
+/* ========== SECTIONS ========== */
+section {
+  width: 80%;
+  max-width: 700px;
+  background: #fff;
+  margin: 25px auto;
+  padding: 30px;
+  border-radius: 25px;
+  box-shadow: 0 8px 25px rgba(255, 182, 193, 0.2);
+}
+
+section h2 {
+  color: #d46b8a;
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+/* ========== FORM INPUTS ========== */
+#add-recipe input, #add-recipe textarea {
+  width: 100%;
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: 15px;
+  border: 1px solid #f3c0cf;
+  font-size: 15px;
+}
+
+#add-recipe input:focus, #add-recipe textarea:focus {
+  outline: none;
+  border-color: #e48fa7;
+  box-shadow: 0 0 6px rgba(228, 143, 167, 0.4);
