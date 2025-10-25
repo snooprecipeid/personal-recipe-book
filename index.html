@@ -5,38 +5,32 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Snoop Recipe ID</title>
 
-  <!-- styles (cache buster) -->
-  <link rel="stylesheet" href="style.css?v=2">
-
-  <!-- Fonts & icons -->
+  <link rel="stylesheet" href="style.css?v=4">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  <!-- floating decorative icons -->
+  <!-- Floating icons -->
   <div class="float-icon icon-1"><img src="https://i.ibb.co/YyhC8xr/cupcake-icon.png" alt="cupcake"></div>
   <div class="float-icon icon-2"><img src="https://i.ibb.co/Bz3fD3p/donut-icon.png" alt="donut"></div>
   <div class="float-icon icon-3"><img src="https://i.ibb.co/5MjZC3g/cookie-icon.png" alt="cookie"></div>
 
-  <!-- Header / hero -->
+  <!-- Header -->
   <header class="site-header">
     <div class="header-inner">
       <h1 class="brand"><i class="fa-solid fa-cookie-bite"></i> Snoop Recipe ID</h1>
       <button id="logout-btn" class="btn small" onclick="logout()"><i class="fa-solid fa-door-open"></i> Log Out</button>
     </div>
-    <div class="hero">
-      <div class="hero-left">
-        <h2>Your sweet personal recipe book</h2>
-        <p>Save your favourite recipes, estimate costs, and rate them. Clean, pastel & easy to use.</p>
-      </div>
-      <div class="hero-right">
-        <img src="https://cdn.vectorstock.com/i/1000v/53/26/pastel-dessert-background-vector-44405326.jpg" alt="hero" />
-      </div>
-    </div>
   </header>
 
+  <!-- Hero section -->
+  <section class="hero">
+    <h2>Your sweet personal recipe book</h2>
+    <p>Save your favourite recipes, estimate costs, and rate them.<br>Clean, pastel & easy to use.</p>
+  </section>
+
   <main>
-    <!-- summary dashboard & controls -->
+    <!-- summary dashboard -->
     <section class="dashboard">
       <div class="summary">
         <div><strong id="total-recipes">0</strong><span>Total Recipes</span></div>
@@ -55,33 +49,21 @@
       </div>
     </section>
 
-    <!-- add recipe card -->
+    <!-- Add recipe form -->
     <section class="card add-card" id="add-recipe">
       <h3><i class="fa-solid fa-pen-to-square"></i> Add New Recipe</h3>
-      <div class="form-row">
-        <input id="recipe-name" type="text" placeholder="Recipe Name" />
-      </div>
-      <div class="form-row">
-        <textarea id="recipe-ingredients" rows="3" placeholder="Ingredients (separate lines)"></textarea>
-      </div>
-      <div class="form-row">
-        <textarea id="recipe-steps" rows="4" placeholder="Instructions"></textarea>
-      </div>
-      <div class="form-row">
-        <input id="recipe-cost" type="number" placeholder="Estimated Cost (Rp)" min="0" />
-      </div>
-      <div class="form-row">
-        <label class="file-label">Upload Photos (optional)
-          <input id="recipe-image" type="file" accept="image/*" multiple />
-        </label>
-      </div>
+      <div class="form-row"><input id="recipe-name" type="text" placeholder="Recipe Name" /></div>
+      <div class="form-row"><textarea id="recipe-ingredients" rows="3" placeholder="Ingredients (separate lines)"></textarea></div>
+      <div class="form-row"><textarea id="recipe-steps" rows="4" placeholder="Instructions"></textarea></div>
+      <div class="form-row"><input id="recipe-cost" type="number" placeholder="Estimated Cost (Rp)" min="0" /></div>
+      <div class="form-row"><label class="file-label">Upload Photos (optional)
+        <input id="recipe-image" type="file" accept="image/*" multiple />
+      </label></div>
       <div id="preview-images" class="preview-images"></div>
-      <div class="form-actions">
-        <button class="btn primary" onclick="addRecipe()"><i class="fa-solid fa-floppy-disk"></i> Save Recipe</button>
-      </div>
+      <div class="form-actions"><button class="btn primary" onclick="addRecipe()"><i class="fa-solid fa-floppy-disk"></i> Save Recipe</button></div>
     </section>
 
-    <!-- login section -->
+    <!-- Login Section -->
     <div id="login-section" class="card login-card">
       <div id="login-box" class="login-box">
         <h3><i class="fa-solid fa-cupcake"></i> Sign in</h3>
@@ -105,7 +87,7 @@
       </div>
     </div>
 
-    <!-- recipe grid -->
+    <!-- Recipe List -->
     <section id="recipe-list" class="card-list">
       <h3><i class="fa-solid fa-book-open"></i> Recipe List</h3>
       <div id="recipes-container" class="grid"></div>
@@ -117,7 +99,6 @@
     <div class="small muted">You can export/import or connect to cloud later.</div>
   </footer>
 
-  <script src="script.js?v=2"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>
-
