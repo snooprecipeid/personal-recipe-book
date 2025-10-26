@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Snoop Recipe ID</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <script src="https://kit.fontawesome.com/a2e0e9a78e.js" crossorigin="anonymous"></script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-storage.js"></script>
 </head>
 <body>
   <header>
@@ -16,26 +21,26 @@
   <!-- LOGIN SECTION -->
   <section id="loginSection" class="login-section">
     <h2>Sign In</h2>
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
     <button id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
     <a href="#" id="forgotPassword">Forgot Password?</a>
   </section>
 
-  <!-- MAIN SECTION -->
+  <!-- MAIN APP SECTION -->
   <section id="mainSection" class="hidden">
     <div class="intro">
       <h2>Your sweet personal recipe book</h2>
-      <p>Save your favourite recipes, estimate costs, and rate them. Clean, pastel & easy to use.</p>
+      <p>Save your favorite recipes with photos, cost estimates, and more.</p>
     </div>
 
     <div class="form-container">
       <h3><i class="fas fa-pen-nib"></i> Add New Recipe</h3>
-      <input type="text" id="recipeName" placeholder="Recipe Name">
+      <input type="text" id="recipeName" placeholder="Recipe Name" />
       <textarea id="ingredients" placeholder="Ingredients"></textarea>
       <textarea id="instructions" placeholder="Instructions"></textarea>
-      <input type="number" id="cost" placeholder="Estimated Cost (Rp)">
-      <input type="file" id="photo" multiple>
+      <input type="number" id="cost" placeholder="Estimated Cost (Rp)" />
+      <input type="file" id="photo" />
       <button id="saveRecipeBtn"><i class="fas fa-save"></i> Save Recipe</button>
     </div>
 
