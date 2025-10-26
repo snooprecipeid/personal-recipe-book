@@ -1,134 +1,140 @@
-// Initialize localStorage
-if (!localStorage.getItem("recipes")) localStorage.setItem("recipes", "[]");
+// Always clear login when opening the page
+localStorage.removeItem("loggedIn");
 
-const recipesContainer = document.getElementById("recipes-container");
-const recipeImageInput = document.getElementById("recipe-image");
-const previewImages = document.getElementById("preview-images");
-let imageFiles = [];
+const loginSection = document.getElementById("loginSection");
+const mainSection = document.getElementById("mainSection");
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const recipeGrid = document.getElementById("recipeGrid");
+const pagination = document.getElementById("pagination");
 
-recipeImageInput.addEventListener("change", function () {
-  previewImages.innerHTML = "";
-  imageFiles = [];
-  Array.from(this.files).forEach((file) => {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const img = document.createElement("img");
-      img.src = e.target.result;
-      previewImages.appendChild(img);
-      imageFiles.push(e.target.result);
-    };
-    reader.readAsDataURL(file);
-  });
+let recipes = JSON.parse(localStorage.getItem("recipes")) || [];
+const RECIPES_PER_PAGE = 6;
+let currentPage = 1;
+
+// LOGIN SYSTEM
+loginBtn.addEventListener("click", () => {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+  if (user === "admin" && pass === "recipe123") {
+    localStorage.setItem("loggedIn", "true");
+    loginSection.classList.add("hidden");
+    mainSection.classList.remove("hidden");
+    renderRecipesPage(1);
+  } else {
+    alert("Invalid credentials");
+  }
 });
 
-function getRecipes() {
-  return JSON.parse(localStorage.getItem("recipes") || "[]");
-}
-function saveRecipes(list) {
-  localStorage.setItem("recipes", JSON.stringify(list));
-}
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("loggedIn");
+  location.reload();
+});
 
-function addRecipe() {
-  const name = document.getElementById("recipe-name").value.trim();
-  const ingredients = document.getElementById("recipe-ingredients").value.trim();
-  const steps = document.getElementById("recipe-steps").value.trim();
-  const cost = Number(document.getElementById("recipe-cost").value || 0);
+// RECIPE SAVE
+document.getElementById("saveRecipeBtn").addEventListener("click", () => {
+  const name = document.getElementById("recipeName").value.trim();
+  const ingredients = document.getElementById("ingredients").value.trim();
+  const instructions = document.getElementById("instructions").value.trim();
+  const cost = document.getElementById("cost").value.trim();
+  const photos = document.getElementById("photo").files;
 
-  if (!name || !ingredients || !steps) {
-    alert("Please fill all fields!");
+  if (!name) {
+    alert("Please enter a recipe name!");
     return;
   }
 
-  const recipes = getRecipes();
-  recipes.unshift({
-    id: Date.now(),
-    name,
-    ingredients,
-    steps,
-    cost,
-    images: imageFiles,
-    rating: 0,
-    comments: []
+  let photoURLs = [];
+  for (let i = 0; i < photos.length; i++) {
+    photoURLs.push(URL.createObjectURL(photos[i]));
+  }
+
+  recipes.push({
+    name, ingredients, instructions, cost, photoURLs,
+    rating: 0, comments: []
   });
-  saveRecipes(recipes);
 
-  // reset form
-  document.querySelectorAll("#recipe-name, #recipe-ingredients, #recipe-steps, #recipe-cost").forEach(el => el.value = "");
-  previewImages.innerHTML = "";
-  imageFiles = [];
-  renderAll();
-}
+  localStorage.setItem("recipes", JSON.stringify(recipes));
+  renderRecipesPage(currentPage);
+  alert("Recipe saved!");
+});
 
-function deleteRecipe(id) {
-  if (!confirm("Delete this recipe?")) return;
-  const recipes = getRecipes().filter(r => r.id !== id);
-  saveRecipes(recipes);
-  renderAll();
-}
+// PAGINATION
+function renderRecipesPage(page) {
+  recipeGrid.innerHTML = "";
+  pagination.innerHTML = "";
 
-function rateRecipe(id, stars) {
-  const recipes = getRecipes();
-  const recipe = recipes.find(r => r.id === id);
-  if (recipe) recipe.rating = stars;
-  saveRecipes(recipes);
-  renderAll();
-}
+  const start = (page - 1) * RECIPES_PER_PAGE;
+  const end = start + RECIPES_PER_PAGE;
+  const paginatedRecipes = recipes.slice(start, end);
 
-function addComment(id) {
-  const commentInput = document.getElementById(`comment-input-${id}`);
-  const commentText = commentInput.value.trim();
-  if (!commentText) return;
-  const recipes = getRecipes();
-  const recipe = recipes.find(r => r.id === id);
-  if (recipe) {
-    recipe.comments.push(commentText);
-    saveRecipes(recipes);
-    renderAll();
-  }
-}
-
-function renderAll() {
-  const recipes = getRecipes();
-  recipesContainer.innerHTML = "";
-  if (!recipes.length) {
-    recipesContainer.innerHTML = "<p class='muted'>No recipes yet.</p>";
-    return;
-  }
-
-  recipes.forEach((r) => {
+  paginatedRecipes.forEach((r, idx) => {
     const card = document.createElement("div");
     card.className = "recipe-card";
 
-    let starsHTML = "";
-    for (let i = 1; i <= 5; i++) {
-      const cls = i <= r.rating ? "fa-star active-star" : "fa-star";
-      starsHTML += `<i class="fa-solid ${cls}" onclick="rateRecipe(${r.id}, ${i})"></i>`;
-    }
-
-    const commentsHTML = r.comments.map(c => `<div class="comment-list">💬 ${c}</div>`).join("");
+    let imgs = r.photoURLs.map(p => `<img src="${p}">`).join("");
 
     card.innerHTML = `
-      ${r.images[0] ? `<img src="${r.images[0]}" alt="${r.name}">` : ""}
+      ${imgs}
       <h4>${r.name}</h4>
-      <p><strong>Ingredients:</strong><br>${r.ingredients.replace(/\n/g, "<br>")}</p>
-      <p><strong>Instructions:</strong><br>${r.steps.replace(/\n/g, "<br>")}</p>
-      <p><span style="background:#ffe8ef;padding:6px 10px;border-radius:10px;color:#b94f6f;font-weight:700;">💰 Rp ${r.cost.toLocaleString()}</span></p>
-      <div class="rating">${starsHTML}</div>
-      <div class="comment-box">
-        <textarea id="comment-input-${r.id}" placeholder="Add a comment..."></textarea>
-        <button onclick="addComment(${r.id})">Post</button>
+      <p><b>Ingredients:</b><br>${r.ingredients}</p>
+      <p><b>Instructions:</b><br>${r.instructions}</p>
+      <div class="cost">💰 Rp ${r.cost || "-"}</div>
+      <div class="rating" data-index="${start + idx}">
+        ${[1,2,3,4,5].map(n => `<span class="star ${n <= r.rating ? "active" : ""}">&#9733;</span>`).join("")}
       </div>
-      ${commentsHTML}
-      <div style="text-align:right;margin-top:8px;">
-        <button class="btn" onclick="deleteRecipe(${r.id})"><i class="fa-solid fa-trash"></i></button>
+      <div class="comment-box">
+        <textarea placeholder="Add a comment..."></textarea><br>
+        <button class="post-comment">Post</button>
+        <div class="comments">${r.comments.map(c => `<p>💬 ${c}</p>`).join("")}</div>
       </div>
     `;
-    recipesContainer.appendChild(card);
+    recipeGrid.appendChild(card);
   });
+
+  // Rating
+  document.querySelectorAll(".rating").forEach(ratingDiv => {
+    ratingDiv.querySelectorAll(".star").forEach((star, idx) => {
+      star.onclick = () => {
+        const recipeIndex = ratingDiv.getAttribute("data-index");
+        recipes[recipeIndex].rating = idx + 1;
+        localStorage.setItem("recipes", JSON.stringify(recipes));
+        renderRecipesPage(page);
+      };
+    });
+  });
+
+  // Comments
+  document.querySelectorAll(".post-comment").forEach((btn, i) => {
+    btn.addEventListener("click", () => {
+      const commentInput = btn.previousElementSibling;
+      const text = commentInput.value.trim();
+      if (text) {
+        const recipeIndex = start + i;
+        recipes[recipeIndex].comments.push(text);
+        localStorage.setItem("recipes", JSON.stringify(recipes));
+        renderRecipesPage(page);
+      }
+    });
+  });
+
+  // Pagination Buttons
+  const totalPages = Math.ceil(recipes.length / RECIPES_PER_PAGE);
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.className = "page-btn" + (i === page ? " active" : "");
+    btn.textContent = i;
+    btn.addEventListener("click", () => {
+      currentPage = i;
+      renderRecipesPage(i);
+    });
+    pagination.appendChild(btn);
+  }
 }
 
-function logout() {
-  alert("Logged out!");
+// AUTO LOGOUT DISPLAY
+if (localStorage.getItem("loggedIn") === "true") {
+  loginSection.classList.add("hidden");
+  mainSection.classList.remove("hidden");
+  renderRecipesPage(1);
 }
-
-document.addEventListener("DOMContentLoaded", renderAll);
