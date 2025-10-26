@@ -5,86 +5,35 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Snoop Recipe ID</title>
 
-  <link rel="stylesheet" href="style.css?v=5">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
-  <!-- Header -->
   <header class="site-header">
     <div class="header-inner">
       <h1 class="brand"><i class="fa-solid fa-cookie-bite"></i> Snoop Recipe ID</h1>
-      <button id="logout-btn" class="btn small" onclick="logout()"><i class="fa-solid fa-door-open"></i> Log Out</button>
+      <button id="logout-btn" onclick="logout()"><i class="fa-solid fa-door-open"></i> Log Out</button>
     </div>
   </header>
 
-  <!-- Hero section -->
-  <section class="hero">
-    <h2>Your sweet personal recipe book</h2>
-    <p>Save your favourite recipes, estimate costs, and rate them.<br>Clean, pastel & easy to use.</p>
-  </section>
-
   <main>
-    <!-- summary dashboard -->
-    <section class="dashboard">
-      <div class="summary">
-        <div><strong id="total-recipes">0</strong><span>Total Recipes</span></div>
-        <div><strong id="total-cost">Rp 0</strong><span>Total Estimated Cost</span></div>
-        <div><strong id="avg-rating">0.0</strong><span>Average Rating</span></div>
-      </div>
-
-      <div class="controls">
-        <input id="search-input" type="search" placeholder="Search recipes..." oninput="renderFiltered()" />
-        <select id="sort-select" onchange="renderFiltered()">
-          <option value="newest">Sort: Newest</option>
-          <option value="cost-asc">Cost: Low → High</option>
-          <option value="cost-desc">Cost: High → Low</option>
-          <option value="rating-desc">Rating: High → Low</option>
-        </select>
-        <button class="btn danger" onclick="clearAllRecipes()"><i class="fa-solid fa-trash"></i> Clear All</button>
-      </div>
-    </section>
-
-    <!-- Add recipe form -->
-    <section class="card add-card" id="add-recipe">
+    <section class="card add-card">
       <h3><i class="fa-solid fa-pen-to-square"></i> Add New Recipe</h3>
-      <div class="form-row"><input id="recipe-name" type="text" placeholder="Recipe Name" /></div>
-      <div class="form-row"><textarea id="recipe-ingredients" rows="3" placeholder="Ingredients (separate lines)"></textarea></div>
-      <div class="form-row"><textarea id="recipe-steps" rows="4" placeholder="Instructions"></textarea></div>
-      <div class="form-row"><input id="recipe-cost" type="number" placeholder="Estimated Cost (Rp)" min="0" /></div>
-      <div class="form-row"><label class="file-label">Upload Photos (optional)
+
+      <input id="recipe-name" type="text" placeholder="Recipe Name" />
+      <textarea id="recipe-ingredients" rows="3" placeholder="Ingredients"></textarea>
+      <textarea id="recipe-steps" rows="3" placeholder="Instructions"></textarea>
+      <input id="recipe-cost" type="number" placeholder="Estimated Cost (Rp)" min="0" />
+      <label class="file-label">Upload Photos:
         <input id="recipe-image" type="file" accept="image/*" multiple />
-      </label></div>
+      </label>
       <div id="preview-images" class="preview-images"></div>
-      <div class="form-actions"><button class="btn primary" onclick="addRecipe()"><i class="fa-solid fa-floppy-disk"></i> Save Recipe</button></div>
+
+      <button class="btn primary" onclick="addRecipe()"><i class="fa-solid fa-floppy-disk"></i> Save Recipe</button>
     </section>
 
-    <!-- Login Section -->
-    <div id="login-section" class="card login-card">
-      <div id="login-box" class="login-box">
-        <h3><i class="fa-solid fa-cupcake"></i> Sign in</h3>
-        <input id="username" type="text" placeholder="Username" />
-        <input id="password" type="password" placeholder="Password" />
-        <div class="login-actions">
-          <button class="btn primary" onclick="login()"><i class="fa-solid fa-right-to-bracket"></i> Sign In</button>
-          <button id="reset-btn" class="btn link" onclick="toggleResetForm()">Forgot Password?</button>
-        </div>
-        <p id="login-error" class="muted error"></p>
-
-        <div id="reset-form" class="hidden reset-form">
-          <h4><i class="fa-solid fa-lock"></i> Reset Password</h4>
-          <input id="new-password" type="password" placeholder="New Password" />
-          <input id="confirm-password" type="password" placeholder="Confirm Password" />
-          <div class="form-actions">
-            <button class="btn" onclick="setNewPassword()"><i class="fa-solid fa-key"></i> Save New Password</button>
-          </div>
-          <p id="reset-message" class="muted"></p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Recipe List -->
     <section id="recipe-list" class="card-list">
       <h3><i class="fa-solid fa-book-open"></i> Recipe List</h3>
       <div id="recipes-container" class="grid"></div>
@@ -92,10 +41,9 @@
   </main>
 
   <footer class="site-footer">
-    <div>Made with <span class="heart">♥</span> • Snoop Recipe ID</div>
-    <div class="small muted">You can export/import or connect to cloud later.</div>
+    Made with <span class="heart">♥</span> • Snoop Recipe ID
   </footer>
 
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=3"></script>
 </body>
 </html>
