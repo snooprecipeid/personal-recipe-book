@@ -1,6 +1,23 @@
-// Always require login every refresh
+// Selalu reset login saat buka situs
 localStorage.removeItem("loggedIn");
 
+// Firebase Config (pakai punyamu sendiri)
+const firebaseConfig = {
+  apiKey: "AIzaSyBOM-K25yqUIcCyJUUQVNM_Gcv00tdK65g",
+  authDomain: "snoop-recipe.firebaseapp.com",
+  projectId: "snoop-recipe",
+  storageBucket: "snoop-recipe.appspot.com",
+  messagingSenderId: "1069983280773",
+  appId: "1:1069983280773:web:10822e328d2f3e3c9003ec",
+  measurementId: "G-YPXRJVEM1P"
+};
+
+// Inisialisasi Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const storage = firebase.storage();
+
+// Elemen utama
 const loginSection = document.getElementById("loginSection");
 const mainSection = document.getElementById("mainSection");
 const loginBtn = document.getElementById("loginBtn");
@@ -8,9 +25,9 @@ const logoutBtn = document.getElementById("logoutBtn");
 const recipeGrid = document.getElementById("recipeGrid");
 const pagination = document.getElementById("pagination");
 
-let recipes = JSON.parse(localStorage.getItem("recipes")) || [];
 const RECIPES_PER_PAGE = 6;
 let currentPage = 1;
+let recipes = [];
 
 // LOGIN
 loginBtn.addEventListener("click", () => {
@@ -21,7 +38,7 @@ loginBtn.addEventListener("click", () => {
     loginSection.classList.add("hidden");
     mainSection.classList.remove("hidden");
     logoutBtn.classList.remove("hidden");
-    renderRecipesPage(1);
+    loadRecipes();
   } else {
     alert("Invalid credentials");
   }
@@ -32,7 +49,7 @@ logoutBtn.addEventListener("click", () => {
   location.reload();
 });
 
-// SAVE RECIPE
+// SIMPAN RESEP KE FIREBASE
 document.getElementById("saveRecipeBtn").addEventListener("click", async () => {
   const name = document.getElementById("recipeName").value.trim();
   const ingredients = document.getElementById("ingredients").value.trim();
@@ -45,46 +62,52 @@ document.getElementById("saveRecipeBtn").addEventListener("click", async () => {
     return;
   }
 
-  let photoBase64 = [];
+  let photoURLs = [];
   for (let i = 0; i < photos.length; i++) {
-    const base64 = await toBase64(photos[i]);
-    photoBase64.push(base64);
+    const file = photos[i];
+    const storageRef = storage.ref("recipes/" + file.name);
+    await storageRef.put(file);
+    const url = await storageRef.getDownloadURL();
+    photoURLs.push(url);
   }
 
-  recipes.push({
-    name, ingredients, instructions, cost,
-    photos: photoBase64,
-    rating: 0, comments: []
+  await db.collection("recipes").add({
+    name,
+    ingredients,
+    instructions,
+    cost,
+    photoURLs,
+    rating: 0,
+    comments: []
   });
 
-  localStorage.setItem("recipes", JSON.stringify(recipes));
-  renderRecipesPage(currentPage);
-  alert("Recipe saved!");
+  alert("Recipe saved to Firebase!");
+  loadRecipes();
 });
 
-function toBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-  });
+// AMBIL DATA DARI FIRESTORE
+async function loadRecipes() {
+  const snapshot = await db.collection("recipes").get();
+  recipes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  renderRecipesPage(currentPage);
 }
 
-// PAGINATION
+// RENDER RESEP
 function renderRecipesPage(page) {
   recipeGrid.innerHTML = "";
   pagination.innerHTML = "";
 
   const start = (page - 1) * RECIPES_PER_PAGE;
   const end = start + RECIPES_PER_PAGE;
-  const paginatedRecipes = recipes.slice(start, end);
+  const paginated = recipes.slice(start, end);
 
-  paginatedRecipes.forEach((r, idx) => {
+  paginated.forEach((r) => {
     const card = document.createElement("div");
     card.className = "recipe-card";
 
-    let imgs = r.photos.map(p => `<img src="${p}" alt="Recipe photo">`).join("");
+    const imgs = (r.photoURLs || [])
+      .map(url => `<img src="${url}" alt="Recipe photo">`)
+      .join("");
 
     card.innerHTML = `
       ${imgs}
@@ -92,54 +115,52 @@ function renderRecipesPage(page) {
       <p><b>Ingredients:</b><br>${r.ingredients}</p>
       <p><b>Instructions:</b><br>${r.instructions}</p>
       <div class="cost">💰 Rp ${r.cost || "-"}</div>
-      <div class="rating" data-index="${start + idx}">
+      <div class="rating" data-id="${r.id}">
         ${[1,2,3,4,5].map(n => `<span class="star ${n <= r.rating ? "active" : ""}">&#9733;</span>`).join("")}
       </div>
       <div class="comment-box">
         <textarea placeholder="Add a comment..."></textarea><br>
         <button class="post-comment">Post</button>
-        <div class="comments">${r.comments.map(c => `<p>💬 ${c}</p>`).join("")}</div>
+        <div class="comments">${(r.comments || []).map(c => `<p>💬 ${c}</p>`).join("")}</div>
       </div>
     `;
     recipeGrid.appendChild(card);
   });
 
   // Rating
-  document.querySelectorAll(".rating").forEach(ratingDiv => {
-    ratingDiv.querySelectorAll(".star").forEach((star, idx) => {
-      star.onclick = () => {
-        const recipeIndex = ratingDiv.getAttribute("data-index");
-        recipes[recipeIndex].rating = idx + 1;
-        localStorage.setItem("recipes", JSON.stringify(recipes));
-        renderRecipesPage(page);
+  document.querySelectorAll(".rating").forEach(div => {
+    div.querySelectorAll(".star").forEach((star, idx) => {
+      star.onclick = async () => {
+        const id = div.dataset.id;
+        await db.collection("recipes").doc(id).update({ rating: idx + 1 });
+        loadRecipes();
       };
     });
   });
 
   // Comments
   document.querySelectorAll(".post-comment").forEach((btn, i) => {
-    btn.addEventListener("click", () => {
+    btn.onclick = async () => {
       const commentInput = btn.previousElementSibling;
       const text = commentInput.value.trim();
-      if (text) {
-        const recipeIndex = start + i;
-        recipes[recipeIndex].comments.push(text);
-        localStorage.setItem("recipes", JSON.stringify(recipes));
-        renderRecipesPage(page);
-      }
-    });
+      if (!text) return;
+      const recipe = paginated[i];
+      const newComments = [...(recipe.comments || []), text];
+      await db.collection("recipes").doc(recipe.id).update({ comments: newComments });
+      loadRecipes();
+    };
   });
 
-  // Pagination Buttons
+  // Pagination
   const totalPages = Math.ceil(recipes.length / RECIPES_PER_PAGE);
   for (let i = 1; i <= totalPages; i++) {
     const btn = document.createElement("button");
     btn.className = "page-btn" + (i === page ? " active" : "");
     btn.textContent = i;
-    btn.addEventListener("click", () => {
+    btn.onclick = () => {
       currentPage = i;
       renderRecipesPage(i);
-    });
+    };
     pagination.appendChild(btn);
   }
 }
