@@ -41,7 +41,7 @@ header {
   margin: 100px auto;
   padding: 25px;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .login-section input {
@@ -88,7 +88,7 @@ header {
   margin: 20px auto;
   padding: 25px;
   border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .form-container input,
@@ -120,7 +120,7 @@ header {
 .recipe-card {
   background: white;
   border-radius: 16px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
   width: 90%;
   padding: 16px;
 }
