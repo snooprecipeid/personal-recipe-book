@@ -1,3 +1,7 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-storage.js";
+
 // === Firebase Configuration ===
 const firebaseConfig = {
   apiKey: "AIzaSyBOM-K25yqUIcCyJUUQVNM_Gcv00tdK65g",
@@ -9,9 +13,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const storage = firebase.storage();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
 // === Website Logic ===
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,13 +27,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveBtn = document.getElementById('saveRecipeBtn');
   const recipeGrid = document.getElementById('recipeGrid');
 
-  // Set default credentials
+  // Default credentials
   if (!localStorage.getItem('username')) {
     localStorage.setItem('username', 'admin');
     localStorage.setItem('password', 'recipe123');
   }
 
-  // Always start with login
+  // Always show login first
   loginSection.classList.remove('hidden');
   mainSection.classList.add('hidden');
   logoutBtn.classList.add('hidden');
@@ -38,8 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
   loginBtn.addEventListener('click', () => {
     const user = document.getElementById('username').value.trim();
     const pass = document.getElementById('password').value.trim();
+    const savedUser = localStorage.getItem('username');
+    const savedPass = localStorage.getItem('password');
 
-    if (user === localStorage.getItem('username') && pass === localStorage.getItem('password')) {
+    if (user === savedUser && pass === savedPass) {
       loginSection.classList.add('hidden');
       mainSection.classList.remove('hidden');
       logoutBtn.classList.remove('hidden');
@@ -59,9 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // FORGOT PASSWORD
   forgotLink.addEventListener('click', () => {
     const newPass = prompt('Enter your new password:');
-    if (newPass) {
-      localStorage.setItem('password', newPass);
-      alert('Password changed successfully!');
+    if (newPass && newPass.trim() !== '') {
+      localStorage.setItem('password', newPass.trim());
+      alert('Password updated successfully!');
     }
   });
 
@@ -74,30 +80,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const file = document.getElementById('photo').files[0];
 
     if (!name || !ingredients || !instructions || !cost) {
-      alert('Please fill all fields!');
+      alert('Please fill in all fields!');
       return;
     }
 
     try {
       let imageURL = '';
       if (file) {
-        const storageRef = storage.ref(`recipe-images/${Date.now()}-${file.name}`);
-        await storageRef.put(file);
-        imageURL = await storageRef.getDownloadURL();
+        const imageRef = ref(storage, `recipe-images/${Date.now()}-${file.name}`);
+        await uploadBytes(imageRef, file);
+        imageURL = await getDownloadURL(imageRef);
       }
 
-      await db.collection('recipes').add({
+      await addDoc(collection(db, 'recipes'), {
         name,
         ingredients,
         instructions,
         cost,
         imageURL,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        createdAt: serverTimestamp()
       });
 
       alert('Recipe saved successfully!');
-      loadRecipes();
       clearForm();
+      loadRecipes();
     } catch (error) {
       console.error('Error saving recipe:', error);
       alert('Failed to save recipe. Check console.');
@@ -107,10 +113,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // LOAD RECIPES FROM FIREBASE
   async function loadRecipes() {
     recipeGrid.innerHTML = '<p>Loading recipes...</p>';
-    const snapshot = await db.collection('recipes').orderBy('createdAt', 'desc').get();
+    const q = query(collection(db, 'recipes'), orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
 
     recipeGrid.innerHTML = '';
-    snapshot.forEach(doc => {
+    snapshot.forEach((doc) => {
       const r = doc.data();
       const card = document.createElement('div');
       card.className = 'recipe-card';
