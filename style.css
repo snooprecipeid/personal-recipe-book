@@ -59,6 +59,23 @@ header {
   border-radius: 20px;
   border: none;
   cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-section button:hover {
+  background-color: #e47a9b;
+}
+
+#forgotPassword {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #d16ba5;
+  text-decoration: none;
+}
+
+#forgotPassword:hover {
+  text-decoration: underline;
 }
 
 .intro {
@@ -121,72 +138,6 @@ header {
   padding: 5px 12px;
   border-radius: 10px;
   margin: 5px 0;
-}
-
-.rating {
-  display: flex;
-  justify-content: center;
-  margin-top: 8px;
-}
-
-.star {
-  font-size: 20px;
-  color: #ccc;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.star.active {
-  color: #ffb703;
-}
-
-.comment-box {
-  margin-top: 10px;
-}
-
-.comment-box textarea {
-  width: 90%;
-  border-radius: 10px;
-  padding: 8px;
-}
-
-.comment-box button {
-  background: #f48fb1;
-  border: none;
-  color: white;
-  padding: 6px 16px;
-  border-radius: 20px;
-  margin-top: 5px;
-  cursor: pointer;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin: 25px 0;
-  gap: 10px;
-}
-
-.page-btn {
-  background: #f8c3d0;
-  border: none;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s;
-}
-
-.page-btn:hover {
-  background: #f48fb1;
-  color: white;
-}
-
-.page-btn.active {
-  background: #f06292;
-  color: white;
-  transform: scale(1.1);
 }
 
 footer {
