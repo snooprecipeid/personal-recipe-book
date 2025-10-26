@@ -1,49 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Snoop Recipe ID</title>
-
-  <link rel="stylesheet" href="style.css?v=3">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://kit.fontawesome.com/a2e0e9a78e.js" crossorigin="anonymous"></script>
 </head>
 <body>
-
-  <header class="site-header">
-    <div class="header-inner">
-      <h1 class="brand"><i class="fa-solid fa-cookie-bite"></i> Snoop Recipe ID</h1>
-      <button id="logout-btn" onclick="logout()"><i class="fa-solid fa-door-open"></i> Log Out</button>
-    </div>
+  <header>
+    <h1><i class="fas fa-book-open"></i> Snoop Recipe ID</h1>
+    <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Log Out</button>
   </header>
 
-  <main>
-    <section class="card add-card">
-      <h3><i class="fa-solid fa-pen-to-square"></i> Add New Recipe</h3>
+  <section id="loginSection" class="login-section">
+    <h2>Sign in</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+  </section>
 
-      <input id="recipe-name" type="text" placeholder="Recipe Name" />
-      <textarea id="recipe-ingredients" rows="3" placeholder="Ingredients"></textarea>
-      <textarea id="recipe-steps" rows="3" placeholder="Instructions"></textarea>
-      <input id="recipe-cost" type="number" placeholder="Estimated Cost (Rp)" min="0" />
-      <label class="file-label">Upload Photos:
-        <input id="recipe-image" type="file" accept="image/*" multiple />
-      </label>
-      <div id="preview-images" class="preview-images"></div>
+  <section id="mainSection" class="hidden">
+    <div class="intro">
+      <h2>Your sweet personal recipe book</h2>
+      <p>Save your favourite recipes, estimate costs, and rate them. Clean, pastel & easy to use.</p>
+    </div>
 
-      <button class="btn primary" onclick="addRecipe()"><i class="fa-solid fa-floppy-disk"></i> Save Recipe</button>
-    </section>
+    <div class="form-container">
+      <h3><i class="fas fa-pen-nib"></i> Add New Recipe</h3>
+      <input type="text" id="recipeName" placeholder="Recipe Name">
+      <textarea id="ingredients" placeholder="Ingredients"></textarea>
+      <textarea id="instructions" placeholder="Instructions"></textarea>
+      <input type="number" id="cost" placeholder="Estimated Cost (Rp)">
+      <input type="file" id="photo" multiple>
+      <button id="saveRecipeBtn"><i class="fas fa-save"></i> Save Recipe</button>
+    </div>
 
-    <section id="recipe-list" class="card-list">
-      <h3><i class="fa-solid fa-book-open"></i> Recipe List</h3>
-      <div id="recipes-container" class="grid"></div>
-    </section>
-  </main>
+    <div class="recipe-list">
+      <h3><i class="fas fa-book"></i> Recipe List</h3>
+      <div id="recipeGrid" class="grid"></div>
+      <div id="pagination" class="pagination"></div>
+    </div>
 
-  <footer class="site-footer">
-    Made with <span class="heart">♥</span> • Snoop Recipe ID
-  </footer>
+    <footer>
+      Made with ❤️ • Snoop Recipe 
+    </footer>
+  </section>
 
-  <script src="script.js?v=3"></script>
+  <script src="script.js"></script>
 </body>
 </html>
