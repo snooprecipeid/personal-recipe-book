@@ -1,4 +1,4 @@
-// Always clear login when opening the page
+// Always require login every refresh
 localStorage.removeItem("loggedIn");
 
 const loginSection = document.getElementById("loginSection");
@@ -12,7 +12,7 @@ let recipes = JSON.parse(localStorage.getItem("recipes")) || [];
 const RECIPES_PER_PAGE = 6;
 let currentPage = 1;
 
-// LOGIN SYSTEM
+// LOGIN
 loginBtn.addEventListener("click", () => {
   const user = document.getElementById("username").value;
   const pass = document.getElementById("password").value;
@@ -20,6 +20,7 @@ loginBtn.addEventListener("click", () => {
     localStorage.setItem("loggedIn", "true");
     loginSection.classList.add("hidden");
     mainSection.classList.remove("hidden");
+    logoutBtn.classList.remove("hidden");
     renderRecipesPage(1);
   } else {
     alert("Invalid credentials");
@@ -31,8 +32,8 @@ logoutBtn.addEventListener("click", () => {
   location.reload();
 });
 
-// RECIPE SAVE
-document.getElementById("saveRecipeBtn").addEventListener("click", () => {
+// SAVE RECIPE
+document.getElementById("saveRecipeBtn").addEventListener("click", async () => {
   const name = document.getElementById("recipeName").value.trim();
   const ingredients = document.getElementById("ingredients").value.trim();
   const instructions = document.getElementById("instructions").value.trim();
@@ -44,13 +45,15 @@ document.getElementById("saveRecipeBtn").addEventListener("click", () => {
     return;
   }
 
-  let photoURLs = [];
+  let photoBase64 = [];
   for (let i = 0; i < photos.length; i++) {
-    photoURLs.push(URL.createObjectURL(photos[i]));
+    const base64 = await toBase64(photos[i]);
+    photoBase64.push(base64);
   }
 
   recipes.push({
-    name, ingredients, instructions, cost, photoURLs,
+    name, ingredients, instructions, cost,
+    photos: photoBase64,
     rating: 0, comments: []
   });
 
@@ -58,6 +61,15 @@ document.getElementById("saveRecipeBtn").addEventListener("click", () => {
   renderRecipesPage(currentPage);
   alert("Recipe saved!");
 });
+
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+  });
+}
 
 // PAGINATION
 function renderRecipesPage(page) {
@@ -72,7 +84,7 @@ function renderRecipesPage(page) {
     const card = document.createElement("div");
     card.className = "recipe-card";
 
-    let imgs = r.photoURLs.map(p => `<img src="${p}">`).join("");
+    let imgs = r.photos.map(p => `<img src="${p}" alt="Recipe photo">`).join("");
 
     card.innerHTML = `
       ${imgs}
@@ -130,11 +142,4 @@ function renderRecipesPage(page) {
     });
     pagination.appendChild(btn);
   }
-}
-
-// AUTO LOGOUT DISPLAY
-if (localStorage.getItem("loggedIn") === "true") {
-  loginSection.classList.add("hidden");
-  mainSection.classList.remove("hidden");
-  renderRecipesPage(1);
 }
