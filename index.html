@@ -1,62 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Snoop Recipe ID</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://kit.fontawesome.com/a2e0e9a78e.js" crossorigin="anonymous"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Snoop Recipe — Firebase Auth</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 0.5rem;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2563eb;
+    }
+
+    #forgotPasswordBtn {
+      background: #f97316;
+    }
+    #forgotPasswordBtn:hover {
+      background: #ea580c;
+    }
+
+    #logoutBtn {
+      background: #ef4444;
+    }
+    #logoutBtn:hover {
+      background: #dc2626;
+    }
+
+    #loginError {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+
+    #mainSection {
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1><i class="fas fa-book-open"></i> Snoop Recipe ID</h1>
-    <button id="logoutBtn" class="logout-btn hidden">
-      <i class="fas fa-sign-out-alt"></i> Log Out
-    </button>
-  </header>
 
-  <!-- LOGIN -->
-  <section id="loginSection" class="login-section">
-    <h2>Sign In</h2>
-    <input type="email" id="email" placeholder="Email" autocomplete="username" />
-    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
-    <div class="login-actions">
-      <button id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
-      <button id="registerBtn" class="ghost"><i class="fas fa-user-plus"></i> Register</button>
-    </div>
-    <a href="#" id="forgotPassword">Forgot Password?</a>
-    <p id="authError" class="error-msg hidden"></p>
-  </section>
+  <div class="container">
+    <!-- LOGIN SECTION -->
+    <div id="loginSection">
+      <h2>Login</h2>
+      <input type="email" id="username" placeholder="Email" autocomplete="username" />
+      <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
 
-  <!-- MAIN -->
-  <section id="mainSection" class="hidden">
-    <div class="intro">
-      <h2>Your sweet personal recipe book</h2>
-      <p>Save your favourite recipes, estimate costs, and rate them. Clean, pastel & easy to use.</p>
+      <button id="loginBtn" type="button">Login</button>
+      <button id="registerBtn" type="button">Register</button>
+      <button id="forgotPasswordBtn" type="button">Forgot Password</button>
+
+      <div id="loginError"></div>
     </div>
 
-    <div class="form-container">
-      <h3><i class="fas fa-pen-nib"></i> Add New Recipe</h3>
-      <input type="text" id="recipeName" placeholder="Recipe Name" />
-      <textarea id="ingredients" placeholder="Ingredients"></textarea>
-      <textarea id="instructions" placeholder="Instructions"></textarea>
-      <input type="number" id="cost" placeholder="Estimated Cost (Rp)" />
-      <input type="file" id="photo" multiple accept="image/*" />
-      <button id="saveRecipeBtn"><i class="fas fa-save"></i> Save Recipe</button>
-      <p id="saveStatus" class="status-msg"></p>
+    <!-- MAIN SECTION -->
+    <div id="mainSection" style="display:none;">
+      <h2>Halo 👋</h2>
+      <p>Anda sudah berhasil login ke Firebase!</p>
+      <button id="logoutBtn" type="button">Logout</button>
     </div>
+  </div>
 
-    <div class="recipe-list">
-      <h3><i class="fas fa-book"></i> Recipe List</h3>
-      <div id="recipeGrid" class="grid"></div>
-    </div>
-
-    <footer>
-      Made with ❤️ • Snoop Recipe ID
-    </footer>
-  </section>
-
-  <!-- App (ESM + Firebase CDN) -->
-  <script type="module" src="script.js"></script>
-</body>
-</html>
+  <
