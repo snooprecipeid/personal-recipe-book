@@ -154,3 +154,22 @@ header {
 }
 footer { margin-top: 40px; color: #b46a7d; font-size: 14px; }
 
+/* Warna bintang aktif (saat dipilih) */
+.star-btn {
+  border: none;
+  background: transparent;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #ccc; /* warna default (abu-abu muda) */
+  transition: color 0.2s;
+}
+
+.star-btn:hover {
+  color: #FFD700; /* warna saat hover - gold */
+}
+
+.star-btn.selected,
+.star-btn.active {
+  color: #FFD700; /* warna saat dipilih - gold */
+}
+
