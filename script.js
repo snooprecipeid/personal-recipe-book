@@ -1,51 +1,104 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const loginSection = document.getElementById('loginSection');
-  const mainSection = document.getElementById('mainSection');
-  const loginBtn = document.getElementById('loginBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const forgotLink = document.getElementById('forgotPassword');
+// ===== Import Firebase SDK (v11 CDN) =====
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-  // Simpan username & password default
-  if (!localStorage.getItem('username')) {
-    localStorage.setItem('username', 'admin');
-    localStorage.setItem('password', 'admin');
+// ===== Konfigurasi Firebase (punyamu) =====
+const firebaseConfig = {
+  apiKey: "AIzaSyBOM-K25yqUlcCyJUUQVNM_Gcv0OtdK65g",
+  authDomain: "snoop-recipe.firebaseapp.com",
+  projectId: "snoop-recipe",
+  storageBucket: "snoop-recipe.firebasestorage.app",
+  messagingSenderId: "1069983280773",
+  appId: "1:1069983280773:web:10822e328d2f3e3c9003ec",
+  measurementId: "G-YPXRJVEM1P"
+};
+
+// ===== Inisialisasi Firebase =====
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+console.log("Firebase initialized");
+
+// ===== Ambil elemen dari HTML =====
+const loginSection = document.getElementById("loginSection");
+const mainSection = document.getElementById("mainSection");
+
+const emailInput = document.getElementById("username");
+const passwordInput = document.getElementById("password");
+
+const loginBtn = document.getElementById("loginBtn");
+const registerBtn = document.getElementById("registerBtn");
+const forgotBtn = document.getElementById("forgotPasswordBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const loginError = document.getElementById("loginError");
+
+// ===== Event: Login =====
+loginBtn.addEventListener("click", async () => {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  if (!email || !password) {
+    loginError.innerText = "Email dan Password wajib diisi!";
+    return;
   }
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    console.log("Login success");
+  } catch (error) {
+    loginError.innerText = error.message;
+  }
+});
 
-  // Tampilkan login di awal
-  loginSection.classList.remove('hidden');
-  mainSection.classList.add('hidden');
-  logoutBtn.classList.add('hidden');
+// ===== Event: Register (optional) =====
+registerBtn.addEventListener("click", async () => {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  if (!email || !password) {
+    loginError.innerText = "Email dan Password wajib diisi!";
+    return;
+  }
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+    console.log("Register success");
+  } catch (error) {
+    loginError.innerText = error.message;
+  }
+});
 
-  // LOGIN
-  loginBtn.addEventListener('click', () => {
-    const user = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value.trim();
+// ===== Event: Forgot Password =====
+forgotBtn.addEventListener("click", async () => {
+  const email = emailInput.value.trim();
+  if (!email) {
+    alert("Masukkan email Anda dulu.");
+    return;
+  }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert("Link reset password telah dikirim ke email.");
+  } catch (error) {
+    alert(error.message);
+  }
+});
 
-    const savedUser = localStorage.getItem('username');
-    const savedPass = localStorage.getItem('password');
+// ===== Event: Logout =====
+logoutBtn.addEventListener("click", async () => {
+  await signOut(auth);
+});
 
-    if (user === savedUser && pass === savedPass) {
-      loginSection.classList.add('hidden');
-      mainSection.classList.remove('hidden');
-      logoutBtn.classList.remove('hidden');
-    } else {
-      alert('Incorrect username or password');
-    }
-  });
-
-  // LOGOUT
-  logoutBtn.addEventListener('click', () => {
-    mainSection.classList.add('hidden');
-    loginSection.classList.remove('hidden');
-    logoutBtn.classList.add('hidden');
-  });
-
-  // FORGOT PASSWORD
-  forgotLink.addEventListener('click', () => {
-    const newPass = prompt('Enter your new password:');
-    if (newPass && newPass.trim() !== '') {
-      localStorage.setItem('password', newPass.trim());
-      alert('Password has been updated successfully!');
-    }
-  });
+// ===== Cek Status Login =====
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log("Logged in:", user.email);
+    loginSection.style.display = "none";
+    mainSection.style.display = "block";
+  } else {
+    console.log("Not logged in");
+    loginSection.style.display = "block";
+    mainSection.style.display = "none";
+  }
 });
