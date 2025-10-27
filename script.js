@@ -1,104 +1,166 @@
-// ===== Import Firebase SDK (v11 CDN) =====
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import {
   getAuth,
-  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
   sendPasswordResetEmail,
-  onAuthStateChanged,
-  signOut
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
-// ===== Konfigurasi Firebase (punyamu) =====
+// KONFIGURASI FIREBASE KAMU
 const firebaseConfig = {
-  apiKey: "AIzaSyBOM-K25yqUlcCyJUUQVNM_Gcv0OtdK65g",
-  authDomain: "snoop-recipe.firebaseapp.com",
-  projectId: "snoop-recipe",
-  storageBucket: "snoop-recipe.firebasestorage.app",
-  messagingSenderId: "1069983280773",
-  appId: "1:1069983280773:web:10822e328d2f3e3c9003ec",
-  measurementId: "G-YPXRJVEM1P"
+  apiKey: "API_KEY_KAMU",
+  authDomain: "PROJECT_ID.firebaseapp.com",
+  projectId: "PROJECT_ID",
+  storageBucket: "PROJECT_ID.appspot.com",
+  messagingSenderId: "SENDER_ID",
+  appId: "APP_ID"
 };
 
-// ===== Inisialisasi Firebase =====
+// Inisialisasi
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-console.log("Firebase initialized");
+const db = getFirestore(app);
+const storage = getStorage(app);
 
-// ===== Ambil elemen dari HTML =====
+// Element
 const loginSection = document.getElementById("loginSection");
 const mainSection = document.getElementById("mainSection");
-
-const emailInput = document.getElementById("username");
-const passwordInput = document.getElementById("password");
+const logoutBtn = document.getElementById("logoutBtn");
 
 const loginBtn = document.getElementById("loginBtn");
 const registerBtn = document.getElementById("registerBtn");
-const forgotBtn = document.getElementById("forgotPasswordBtn");
-const logoutBtn = document.getElementById("logoutBtn");
+const forgotPasswordBtn = document.getElementById("forgotPasswordBtn");
+
+const username = document.getElementById("username");
+const password = document.getElementById("password");
 const loginError = document.getElementById("loginError");
 
-// ===== Event: Login =====
+const saveRecipeBtn = document.getElementById("saveRecipeBtn");
+const recipeGrid = document.getElementById("recipeGrid");
+const recipeName = document.getElementById("recipeName");
+const ingredients = document.getElementById("ingredients");
+const instructions = document.getElementById("instructions");
+const cost = document.getElementById("cost");
+const photo = document.getElementById("photo");
+const saveStatus = document.getElementById("saveStatus");
+
+// AUTH
 loginBtn.addEventListener("click", async () => {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-  if (!email || !password) {
-    loginError.innerText = "Email dan Password wajib diisi!";
-    return;
-  }
   try {
-    await signInWithEmailAndPassword(auth, email, password);
-    console.log("Login success");
-  } catch (error) {
-    loginError.innerText = error.message;
+    await signInWithEmailAndPassword(auth, username.value, password.value);
+  } catch (err) {
+    loginError.textContent = err.message;
   }
 });
 
-// ===== Event: Register (optional) =====
 registerBtn.addEventListener("click", async () => {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-  if (!email || !password) {
-    loginError.innerText = "Email dan Password wajib diisi!";
-    return;
-  }
   try {
-    await createUserWithEmailAndPassword(auth, email, password);
-    console.log("Register success");
-  } catch (error) {
-    loginError.innerText = error.message;
+    await createUserWithEmailAndPassword(auth, username.value, password.value);
+    alert("Registration successful!");
+  } catch (err) {
+    loginError.textContent = err.message;
   }
 });
 
-// ===== Event: Forgot Password =====
-forgotBtn.addEventListener("click", async () => {
-  const email = emailInput.value.trim();
-  if (!email) {
-    alert("Masukkan email Anda dulu.");
-    return;
-  }
+forgotPasswordBtn.addEventListener("click", async () => {
   try {
-    await sendPasswordResetEmail(auth, email);
-    alert("Link reset password telah dikirim ke email.");
-  } catch (error) {
-    alert(error.message);
+    await sendPasswordResetEmail(auth, username.value);
+    alert("Password reset email sent!");
+  } catch (err) {
+    loginError.textContent = err.message;
   }
 });
 
-// ===== Event: Logout =====
 logoutBtn.addEventListener("click", async () => {
   await signOut(auth);
 });
 
-// ===== Cek Status Login =====
+// Ubah tampilan sesuai login
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    console.log("Logged in:", user.email);
-    loginSection.style.display = "none";
-    mainSection.style.display = "block";
+    loginSection.classList.add("hidden");
+    mainSection.classList.remove("hidden");
+    logoutBtn.classList.remove("hidden");
+    loadRecipes();
   } else {
-    console.log("Not logged in");
-    loginSection.style.display = "block";
-    mainSection.style.display = "none";
+    loginSection.classList.remove("hidden");
+    mainSection.classList.add("hidden");
+    logoutBtn.classList.add("hidden");
   }
 });
+
+// SIMPAN RESEP
+saveRecipeBtn.addEventListener("click", async () => {
+  saveStatus.textContent = "Uploading...";
+  let imageUrl = "";
+  const file = photo.files[0];
+
+  if (file) {
+    const storageRef = ref(storage, `recipes/${Date.now()}_${file.name}`);
+    await uploadBytes(storageRef, file);
+    imageUrl = await getDownloadURL(storageRef);
+  }
+
+  await addDoc(collection(db, "recipes"), {
+    name: recipeName.value,
+    ingredients: ingredients.value,
+    instructions: instructions.value,
+    cost: cost.value,
+    image: imageUrl
+  });
+
+  recipeName.value = "";
+  ingredients.value = "";
+  instructions.value = "";
+  cost.value = "";
+  photo.value = "";
+  saveStatus.textContent = "Recipe saved!";
+  loadRecipes();
+});
+
+// LOAD RESEP
+async function loadRecipes() {
+  recipeGrid.innerHTML = "";
+  const querySnapshot = await getDocs(collection(db, "recipes"));
+  querySnapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const card = document.createElement("div");
+    card.className = "recipe-card";
+    card.innerHTML = `
+      ${data.image ? `<img src="${data.image}" alt="${data.name}"/>` : ""}
+      <h4>${data.name}</h4>
+      <p><strong>Ingredients:</strong> ${data.ingredients}</p>
+      <p><strong>Instructions:</strong> ${data.instructions}</p>
+      <p><strong>Rp ${data.cost}</strong></p>
+      <button onclick="deleteRecipe('${docSnap.id}', '${data.image}')">Delete</button>
+    `;
+    recipeGrid.appendChild(card);
+  });
+}
+
+// HAPUS RESEP
+window.deleteRecipe = async function (id, imageUrl) {
+  await deleteDoc(doc(db, "recipes", id));
+  if (imageUrl) {
+    const imageRef = ref(storage, imageUrl);
+    await deleteObject(imageRef);
+  }
+  loadRecipes();
+};
