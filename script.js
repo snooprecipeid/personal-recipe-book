@@ -1,8 +1,6 @@
 // Firebase via CDN (ES Modules)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import {
-  getAnalytics
-} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
 import {
   getAuth,
   onAuthStateChanged,
@@ -33,7 +31,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyBOM-K25yqUlcCyJUUQVNM_Gcv0OtdK65g",
   authDomain: "snoop-recipe.firebaseapp.com",
   projectId: "snoop-recipe",
-  storageBucket: "snoop-recipe.appspot.com",
+  storageBucket: "snoop-recipe.appspot.com", // << diperbaiki
   messagingSenderId: "1069983280773",
   appId: "1:1069983280773:web:10822e328d2f3e3c9003ec",
   measurementId: "G-YPXRJVEM1P"
@@ -41,7 +39,7 @@ const firebaseConfig = {
 
 // Init
 const app = initializeApp(firebaseConfig);
-try { getAnalytics(app); } catch { /* analytics optional on http */ }
+try { getAnalytics(app); } catch { /* analytics optional di http */ }
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
@@ -69,6 +67,16 @@ const recipeGrid = document.getElementById("recipeGrid");
 
 function show(el){ el.classList.remove("hidden"); }
 function hide(el){ el.classList.add("hidden"); }
+
+/** ---------- Helper log ke UI ---------- */
+function uiLog(msg) {
+  console.log("[RecipeSave]", msg);
+  if (saveStatus) saveStatus.textContent = String(msg);
+}
+window.addEventListener("error", (e) => {
+  console.error("[GlobalError]", e.error || e.message || e);
+  uiLog("Error: " + (e.error?.message || e.message || e));
+});
 
 /** ---------- Auth Actions ---------- */
 loginBtn.addEventListener("click", async () => {
@@ -114,31 +122,53 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-/** ---------- Save & Load Recipes ---------- */
+/** ---------- Save Recipe (dengan log & fallback) ---------- */
 saveRecipeBtn.addEventListener("click", async () => {
   const user = auth.currentUser;
   if (!user) { alert("Silakan login terlebih dahulu."); return; }
-  saveStatus.textContent = "Saving...";
+
+  uiLog("Saving... (init)");
 
   try {
     const name = recipeNameEl.value.trim();
     const ingredients = ingredientsEl.value.trim();
     const instructions = instructionsEl.value.trim();
     const cost = Number(costEl.value || 0);
-
     if (!name) throw new Error("Recipe Name wajib diisi.");
 
-    // Upload photos (optional)
+    // Upload foto (optional) — tidak boleh bikin app ngegantung
     const files = Array.from(photoEl.files || []);
     const photoURLs = [];
-    for (const file of files) {
-      const key = `recipes/${user.uid}/${Date.now()}_${file.name}`;
-      const r = sRef(storage, key);
-      await uploadBytes(r, file);
-      const url = await getDownloadURL(r);
-      photoURLs.push(url);
+
+    if (files.length > 0) {
+      uiLog("Uploading photo(s)...");
+      for (const file of files) {
+        try {
+          const key = `recipes/${user.uid}/${Date.now()}_${file.name}`;
+          const r = sRef(storage, key);
+
+          // Timeout manual 60s supaya tidak diam selamanya
+          const uploadPromise = uploadBytes(r, file);
+          const withTimeout = Promise.race([
+            uploadPromise,
+            new Promise((_, rej) => setTimeout(() => rej(new Error("Upload timeout: 60s")), 60000))
+          ]);
+
+          await withTimeout;
+          const url = await getDownloadURL(r);
+          photoURLs.push(url);
+          uiLog("Uploaded: " + file.name);
+        } catch (err) {
+          console.error("[StorageUploadError]", err);
+          uiLog("Peringatan: gagal upload " + file.name + " → lanjut tanpa foto ini.");
+        }
+      }
+    } else {
+      uiLog("No photo selected. Skipping upload.");
     }
 
+    // Simpan dokumen ke Firestore
+    uiLog("Saving document to Firestore...");
     const docRef = await addDoc(collection(db, "recipes"), {
       uid: user.uid,
       name,
@@ -149,21 +179,23 @@ saveRecipeBtn.addEventListener("click", async () => {
       createdAt: serverTimestamp(),
     });
 
-    saveStatus.textContent = "Saved! (" + docRef.id + ")";
-    // clear form
+    // Clear form & reload
     recipeNameEl.value = "";
     ingredientsEl.value = "";
     instructionsEl.value = "";
     costEl.value = "";
     photoEl.value = "";
+
+    uiLog("Saved! (" + docRef.id + ")");
     await loadRecipes(user.uid);
-    setTimeout(() => (saveStatus.textContent = ""), 1500);
+    setTimeout(() => uiLog(""), 1500);
   } catch (e) {
-    console.error(e);
-    saveStatus.textContent = "Error: " + e.message;
+    console.error("[RecipeSaveError]", e);
+    uiLog("Error: " + (e?.message || e));
   }
 });
 
+/** ---------- Load Recipes ---------- */
 async function loadRecipes(uid) {
   recipeGrid.innerHTML = "<p>Loading recipes...</p>";
   try {
@@ -218,6 +250,5 @@ function nl2br(s) { return String(s).replaceAll("\n", "<br/>"); }
 
 /** ---------- Boot ---------- */
 document.addEventListener("DOMContentLoaded", () => {
-  // nothing else needed – UI starts in login state
+  // UI mulai di login; tidak perlu init tambahan
 });
-
