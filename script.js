@@ -33,7 +33,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyBOM-K25yqUlcCyJUUQVNM_Gcv0OtdK65g",
   authDomain: "snoop-recipe.firebaseapp.com",
   projectId: "snoop-recipe",
-  storageBucket: "snoop-recipe.firebasestorage.app",
+  storageBucket: "snoop-recipe.appspot.com",
   messagingSenderId: "1069983280773",
   appId: "1:1069983280773:web:10822e328d2f3e3c9003ec",
   measurementId: "G-YPXRJVEM1P"
@@ -220,3 +220,4 @@ function nl2br(s) { return String(s).replaceAll("\n", "<br/>"); }
 document.addEventListener("DOMContentLoaded", () => {
   // nothing else needed – UI starts in login state
 });
+
