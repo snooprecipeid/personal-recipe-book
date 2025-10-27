@@ -105,10 +105,12 @@ function starHTML(value = 0) {
 function renderInteractiveStars(selected = 0) {
   let html = "";
   for (let i = 1; i <= 5; i++) {
-    html += `<button type="button" class="star-btn js-rate-star" data-star="${i}" aria-label="${i} star">${i <= selected ? "★" : "✩"}</button>`;
+    const activeClass = i <= selected ? "selected" : "";
+    html += `<button type="button" class="star-btn js-rate-star ${activeClass}" data-star="${i}" aria-label="${i} star">${"★"}</button>`;
   }
   return html;
 }
+
 
 // ===================== Auth UI =====================
 onAuthStateChanged(auth, async (user) => {
@@ -420,3 +422,4 @@ cancelEditBtn?.addEventListener("click", () => {
 document.addEventListener("DOMContentLoaded", () => {
   // Ditangani onAuthStateChanged
 });
+
