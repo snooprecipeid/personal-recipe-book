@@ -21,10 +21,15 @@
     <input type="email" id="email" placeholder="Email" autocomplete="username" />
     <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
     <div class="login-actions">
-      <button id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
-      <button id="registerBtn" class="ghost"><i class="fas fa-user-plus"></i> Register</button>
-    </div>
-    <a href="#" id="forgotPassword">Forgot Password?</a>
+  <button id="loginBtn" type="button">
+    <i class="fas fa-sign-in-alt"></i> Sign In
+  </button>
+  <button id="registerBtn" type="button" class="ghost">
+    <i class="fas fa-user-plus"></i> Register
+  </button>
+</div>
+<a href="#" id="forgotPassword">Forgot Password?</a>
+
     <p id="authError" class="error-msg hidden"></p>
   </section>
 
@@ -60,3 +65,4 @@
   <script type="module" src="script.js"></script>
 </body>
 </html>
+
